@@ -4,6 +4,7 @@ import (
 	"os"
 	"fmt"
 	"strings"
+	"io/ioutil"
 )
 
 type imageStorageFile struct {
@@ -41,8 +42,8 @@ func (is *imageStorageFile) Get(filename string) ([]byte, error) {
 		return nil, err
 	}
 	defer fd.Close()
-	var imageData []byte
-	if _, err = fd.Read(imageData); err != nil {
+	imageData, err := ioutil.ReadAll(fd)
+	if err != nil {
 		return nil, err
 	}
 	return imageData, nil
