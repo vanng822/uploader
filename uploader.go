@@ -56,13 +56,13 @@ func (u *Uploader) Store(imageData []byte) (filename string, err error) {
 	return
 }
 
-func (u *Uploader) Put(path string, imageData []byte) error {
-	return u.storage.Put(path, imageData)
+func (u *Uploader) Put(filename string, imageData []byte) error {
+	return u.storage.Put(filename, imageData)
 }
-func (u *Uploader) Delete(path string) error {
-	return u.storage.Delete(path)
+func (u *Uploader) Delete(filename string) error {
+	return u.storage.Delete(filename)
 }
 
-func (u *Uploader) Get(path string) ([]byte, error) {
-	return u.storage.Get(path)
+func (u *Uploader) Get(filename string) ([]byte, error) {
+	return u.storage.Get(filename)
 }
