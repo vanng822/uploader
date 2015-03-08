@@ -34,18 +34,18 @@ func UploadHandler(uploader *Uploader, uploadField, filenameField string) http.H
 			// same for now
 			fallthrough
 		case "POST":
-			file, fileinfo, err := req.FormFile(uploadField)
+			file, _, err := req.FormFile(uploadField)
 			if err != nil {
 				res.WriteHeader(http.StatusBadRequest)
 				return
 			}
-			fmt.Println(file, fileinfo)
+			//fmt.Println(file, fileinfo)
 			imageData, err := ioutil.ReadAll(file)
 			if err != nil {
 				res.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-			
+
 			filename, err := uploader.Store(imageData)
 			if err != nil {
 				res.WriteHeader(http.StatusInternalServerError)
@@ -60,12 +60,12 @@ func UploadHandler(uploader *Uploader, uploadField, filenameField string) http.H
 				res.WriteHeader(http.StatusBadRequest)
 				return
 			}
+			if !uploader.Has(filename) {
+				res.WriteHeader(http.StatusNotFound)
+				return
+			}
 			err := uploader.Delete(filename)
 			if err != nil {
-				if !uploader.Has(filename) {
-					res.WriteHeader(http.StatusNotFound)
-					return
-				}
 				res.WriteHeader(http.StatusInternalServerError)
 				return
 			}
