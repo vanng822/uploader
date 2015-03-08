@@ -7,6 +7,11 @@ import (
 	"net/http"
 )
 
+const (
+	ResponseStatusOK    = "OK"
+	ResponseStatusError = "ERROR"
+)
+
 type Handler struct {
 	uploader *Uploader
 }
@@ -61,7 +66,7 @@ func (h *Handler) HandlePut(res http.ResponseWriter, file multipart.File, filena
 	res.WriteHeader(status)
 	result, _ := json.Marshal(
 		map[string]interface{}{
-			"status":   "OK",
+			"status":   ResponseStatusOK,
 			"filename": filename,
 		})
 
@@ -83,7 +88,7 @@ func (h *Handler) HandlePost(res http.ResponseWriter, file multipart.File) {
 	res.WriteHeader(http.StatusCreated)
 	result, _ := json.Marshal(
 		map[string]interface{}{
-			"status":   "OK",
+			"status":   ResponseStatusOK,
 			"filename": filename,
 		})
 
@@ -107,7 +112,7 @@ func (h *Handler) HandleDelete(res http.ResponseWriter, filename string) {
 	res.WriteHeader(http.StatusOK)
 	result, _ := json.Marshal(
 		map[string]interface{}{
-			"status": "OK",
+			"status": ResponseStatusOK,
 		})
 
 	res.Write(result)
