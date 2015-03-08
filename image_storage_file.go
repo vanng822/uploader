@@ -50,8 +50,8 @@ func (is *imageStorageFile) Get(filename string) ([]byte, error) {
 }
 
 func (is *imageStorageFile) Has(filename string) bool {
-	_, err := os.Stat(filename)
-	if os.IsNotExist(err) {
+	_, err := os.Stat(is.makeFilename(filename))
+	if err != nil && os.IsNotExist(err) {
 		return false
 	}
 	return true
