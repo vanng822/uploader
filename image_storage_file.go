@@ -48,3 +48,11 @@ func (is *imageStorageFile) Get(filename string) ([]byte, error) {
 	}
 	return imageData, nil
 }
+
+func (is *imageStorageFile) Has(filename string) bool {
+	_, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
+}

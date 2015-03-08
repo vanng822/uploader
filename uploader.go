@@ -66,3 +66,7 @@ func (u *Uploader) Delete(filename string) error {
 func (u *Uploader) Get(filename string) ([]byte, error) {
 	return u.storage.Get(filename)
 }
+
+func (u *Uploader) Has(filename string) bool {
+	return u.storage.Has(filename)
+}

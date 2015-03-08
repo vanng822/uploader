@@ -33,3 +33,9 @@ func TestGet(t *testing.T) {
 	assert.NotNil(t, imageData)
 	assert.Equal(t, len(imageData), 29429)
 }
+
+func TestHas(t *testing.T) {
+	s := imageStorageFile{directory: "./data"}
+	assert.True(t, s.Has("kth.jpg"))
+	assert.False(t, s.Has("blabla.jpg"))
+}
