@@ -1,0 +1,4 @@
+/src/
+/pkg/
+/example/data/*
+.project
