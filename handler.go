@@ -1,7 +1,7 @@
 package uploader
 
 import (
-	"fmt"
+	"encoding/json"
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
@@ -44,22 +44,28 @@ func (h *Handler) HandlePut(res http.ResponseWriter, file multipart.File, filena
 		return
 	}
 	var status int
-	
+
 	if h.uploader.Exists(filename) {
 		status = http.StatusOK
 	} else {
 		status = http.StatusCreated
 	}
-	
+
 	err = h.uploader.Put(filename, imageData)
-	
+
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	
+
 	res.WriteHeader(status)
-	res.Write([]byte(fmt.Sprintf("{\"status\": \"OK\", \"filename\": \"%s\"}", filename)))
+	result, _ := json.Marshal(
+		map[string]interface{}{
+			"status":   "OK",
+			"filename": filename,
+		})
+
+	res.Write(result)
 }
 
 func (h *Handler) HandlePost(res http.ResponseWriter, file multipart.File) {
@@ -75,7 +81,13 @@ func (h *Handler) HandlePost(res http.ResponseWriter, file multipart.File) {
 		return
 	}
 	res.WriteHeader(http.StatusCreated)
-	res.Write([]byte(fmt.Sprintf("{\"status\": \"OK\", \"filename\": \"%s\"}", filename)))
+	result, _ := json.Marshal(
+		map[string]interface{}{
+			"status":   "OK",
+			"filename": filename,
+		})
+
+	res.Write(result)
 }
 
 func (h *Handler) HandleDelete(res http.ResponseWriter, filename string) {
@@ -93,7 +105,12 @@ func (h *Handler) HandleDelete(res http.ResponseWriter, filename string) {
 		return
 	}
 	res.WriteHeader(http.StatusOK)
-	res.Write([]byte("{\"status\": \"OK\"}"))
+	result, _ := json.Marshal(
+		map[string]interface{}{
+			"status": "OK",
+		})
+
+	res.Write(result)
 }
 
 func UploadHandler(uploader *Uploader, uploadField, filenameField string) http.HandlerFunc {
