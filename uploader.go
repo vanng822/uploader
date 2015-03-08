@@ -79,6 +79,6 @@ func (u *Uploader) Get(filename string) ([]byte, error) {
 	return u.storage.Get(filename)
 }
 
-func (u *Uploader) Has(filename string) bool {
-	return u.storage.Has(filename)
+func (u *Uploader) Exists(filename string) bool {
+	return u.storage.Exists(filename)
 }

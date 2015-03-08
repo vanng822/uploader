@@ -49,7 +49,7 @@ func (is *imageStorageFile) Get(filename string) ([]byte, error) {
 	return imageData, nil
 }
 
-func (is *imageStorageFile) Has(filename string) bool {
+func (is *imageStorageFile) Exists(filename string) bool {
 	_, err := os.Stat(is.makeFilename(filename))
 	if err != nil && os.IsNotExist(err) {
 		return false

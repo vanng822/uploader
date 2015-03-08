@@ -22,7 +22,7 @@ func (h *Handler) HandleGet(res http.ResponseWriter, filename string) {
 	}
 	imageData, err := h.uploader.Get(filename)
 	if err != nil {
-		if !h.uploader.Has(filename) {
+		if !h.uploader.Exists(filename) {
 			res.WriteHeader(http.StatusNotFound)
 			return
 		}
@@ -45,7 +45,7 @@ func (h *Handler) HandlePut(res http.ResponseWriter, file multipart.File, filena
 	}
 	var status int
 	
-	if h.uploader.Has(filename) {
+	if h.uploader.Exists(filename) {
 		status = http.StatusOK
 	} else {
 		status = http.StatusCreated
@@ -83,7 +83,7 @@ func (h *Handler) HandleDelete(res http.ResponseWriter, filename string) {
 		res.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	if !h.uploader.Has(filename) {
+	if !h.uploader.Exists(filename) {
 		res.WriteHeader(http.StatusNotFound)
 		return
 	}

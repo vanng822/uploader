@@ -36,6 +36,6 @@ func TestGet(t *testing.T) {
 
 func TestHas(t *testing.T) {
 	s := imageStorageFile{directory: "./data"}
-	assert.True(t, s.Has("kth.jpg"))
-	assert.False(t, s.Has("blabla.jpg"))
+	assert.True(t, s.Exists("kth.jpg"))
+	assert.False(t, s.Exists("blabla.jpg"))
 }
