@@ -1,6 +1,8 @@
 package uploader
 
 import (
+	"fmt"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -18,17 +20,40 @@ func UploadHandler(uploader *Uploader, uploadField, filenameField string) http.H
 			}
 			imageData, err := uploader.Get(filename)
 			if err != nil {
+				if !uploader.Has(filename) {
+					res.WriteHeader(http.StatusNotFound)
+					return
+				}
 				res.WriteHeader(http.StatusInternalServerError)
 				return
 			}
 			res.WriteHeader(http.StatusOK)
 			res.Write(imageData)
 			return
-		case "POST":
-			//file, fileinfo, err := req.FormFile(uploadField)
-			
 		case "PUT":
-
+			// same for now
+			fallthrough
+		case "POST":
+			file, fileinfo, err := req.FormFile(uploadField)
+			if err != nil {
+				res.WriteHeader(http.StatusBadRequest)
+				return
+			}
+			fmt.Println(file, fileinfo)
+			imageData, err := ioutil.ReadAll(file)
+			if err != nil {
+				res.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			
+			filename, err := uploader.Store(imageData)
+			if err != nil {
+				res.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			res.WriteHeader(http.StatusOK)
+			res.Write([]byte(fmt.Sprintf("{\"status\": \"OK\", \"filename\": \"%s\"}", filename)))
+			return
 		case "DELETE":
 			filename := req.FormValue(filenameField)
 			if filename == "" {
@@ -37,6 +62,10 @@ func UploadHandler(uploader *Uploader, uploadField, filenameField string) http.H
 			}
 			err := uploader.Delete(filename)
 			if err != nil {
+				if !uploader.Has(filename) {
+					res.WriteHeader(http.StatusNotFound)
+					return
+				}
 				res.WriteHeader(http.StatusInternalServerError)
 				return
 			}
