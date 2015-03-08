@@ -45,7 +45,7 @@ func (h *Handler) HandlePost(res http.ResponseWriter, file multipart.File) {
 		res.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	res.WriteHeader(http.StatusOK)
+	res.WriteHeader(http.StatusCreated)
 	res.Write([]byte(fmt.Sprintf("{\"status\": \"OK\", \"filename\": \"%s\"}", filename)))
 }
 
