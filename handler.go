@@ -33,6 +33,35 @@ func (h *Handler) HandleGet(res http.ResponseWriter, filename string) {
 	res.Write(imageData)
 }
 
+func (h *Handler) HandlePut(res http.ResponseWriter, file multipart.File, filename string) {
+	if filename == "" {
+		res.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	imageData, err := ioutil.ReadAll(file)
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	var status int
+	
+	if h.uploader.Has(filename) {
+		status = http.StatusOK
+	} else {
+		status = http.StatusCreated
+	}
+	
+	err = h.uploader.Put(filename, imageData)
+	
+	if err != nil {
+		res.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	
+	res.WriteHeader(status)
+	res.Write([]byte(fmt.Sprintf("{\"status\": \"OK\", \"filename\": \"%s\"}", filename)))
+}
+
 func (h *Handler) HandlePost(res http.ResponseWriter, file multipart.File) {
 	imageData, err := ioutil.ReadAll(file)
 	if err != nil {
@@ -76,8 +105,12 @@ func UploadHandler(uploader *Uploader, uploadField, filenameField string) http.H
 		case "GET":
 			handler.HandleGet(res, req.FormValue(filenameField))
 		case "PUT":
-			// same for now
-			fallthrough
+			file, _, err := req.FormFile(uploadField)
+			if err != nil {
+				res.WriteHeader(http.StatusBadRequest)
+				return
+			}
+			handler.HandlePut(res, file, req.FormValue(filenameField))
 		case "POST":
 			file, _, err := req.FormFile(uploadField)
 			if err != nil {
