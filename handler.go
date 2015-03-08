@@ -15,7 +15,7 @@ func NewHandler(uploader *Uploader) *Handler {
 	return &Handler{uploader: uploader}
 }
 
-func (h *Handler) Get(res http.ResponseWriter, filename string) {
+func (h *Handler) HandleGet(res http.ResponseWriter, filename string) {
 	if filename == "" {
 		res.WriteHeader(http.StatusBadRequest)
 		return
@@ -33,7 +33,7 @@ func (h *Handler) Get(res http.ResponseWriter, filename string) {
 	res.Write(imageData)
 }
 
-func (h *Handler) Post(res http.ResponseWriter, file multipart.File) {
+func (h *Handler) HandlePost(res http.ResponseWriter, file multipart.File) {
 	imageData, err := ioutil.ReadAll(file)
 	if err != nil {
 		res.WriteHeader(http.StatusInternalServerError)
@@ -49,7 +49,7 @@ func (h *Handler) Post(res http.ResponseWriter, file multipart.File) {
 	res.Write([]byte(fmt.Sprintf("{\"status\": \"OK\", \"filename\": \"%s\"}", filename)))
 }
 
-func (h *Handler) Delete(res http.ResponseWriter, filename string) {
+func (h *Handler) HandleDelete(res http.ResponseWriter, filename string) {
 	if filename == "" {
 		res.WriteHeader(http.StatusBadRequest)
 		return
@@ -74,7 +74,7 @@ func UploadHandler(uploader *Uploader, uploadField, filenameField string) http.H
 
 		switch req.Method {
 		case "GET":
-			handler.Get(res, req.FormValue(filenameField))
+			handler.HandleGet(res, req.FormValue(filenameField))
 		case "PUT":
 			// same for now
 			fallthrough
@@ -84,9 +84,9 @@ func UploadHandler(uploader *Uploader, uploadField, filenameField string) http.H
 				res.WriteHeader(http.StatusBadRequest)
 				return
 			}
-			handler.Post(res, file)
+			handler.HandlePost(res, file)
 		case "DELETE":
-			handler.Delete(res, req.FormValue(filenameField))
+			handler.HandleDelete(res, req.FormValue(filenameField))
 		default:
 			res.WriteHeader(http.StatusMethodNotAllowed)
 		}
