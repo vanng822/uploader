@@ -1,0 +1,12 @@
+{
+	"Host": "",
+	"Port": 8080,
+	"Endpoints": [{
+		"Endpoint": "/storage",
+		"FileField": "image",
+		"Storage": {
+			"Type": "file",
+			"Configuration": "./data"
+		}
+	}]
+}
