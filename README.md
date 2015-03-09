@@ -2,7 +2,7 @@
 
 Upload image to storage, retrieve and delete.
 Bundle with File storage but any storage implements
-ImageStorage shold works, please create pull request
+ImageStorage should works, please create pull request
 if you implement one.
 
 ## http request methods
@@ -29,4 +29,6 @@ for deleting an image
     	http.ListenAndServe(":8080", nil)
     } 
     
-    // curl -i -X PUT -F file=@data/kth.jpg http://127.0.0.1:8080/upload
+    // curl -i -X POST -F file=@data/kth.jpg http://127.0.0.1:8080/upload
+    // curl -i -X PUT -F file=@data/kth.jpg http://127.0.0.1:8080/upload?filename=40a0eb02-1e16-44e2-4694-2db2c159d452.jpg
+    // curl -i http://127.0.0.1:8080/upload?filename=40a0eb02-1e16-44e2-4694-2db2c159d452.jpg
