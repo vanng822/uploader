@@ -15,9 +15,9 @@ You have possibility to configure your upload endpoints
 		}]
 	}
 	
-Each endpoint has its own storage. Example above will generate and endpoint where you can do
+Each endpoint has its own storage. Example above will generate an endpoint where you can do
 
-POST at http://127.0.0.1:8080/storage/ for upload a new image
+POST http://127.0.0.1:8080/storage/ for upload a new image
  
 	curl -i -X POST -F image=@data/kth.jpg http://127.0.0.1:8080/storage/
 	=> {"filename":"0f4c13e0-05f9-49ae-5fc9-f2dea9e3e16b.jpg","status":"OK"}
