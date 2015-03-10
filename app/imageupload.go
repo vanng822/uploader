@@ -10,10 +10,6 @@ import (
 	"os"
 )
 
-const (
-	STORAGE_TYPE_FILE = "file"
-)
-
 type StorageConfig struct {
 	Type          string
 	Configuration string
@@ -54,17 +50,17 @@ func main() {
 		port   int
 	)
 
-	flag.StringVar(&host, "h", "", "Host to listen on")
+	flag.StringVar(&host, "h", "", "Host to bind to")
 	flag.IntVar(&port, "p", 0, "Port number to listen on")
 	flag.StringVar(&config, "c", "./config/app.json", "Path to configurations")
 	flag.Parse()
-	
+
 	conf := LoadConfig(config)
-	
+
 	if host != "" {
 		conf.Host = host
 	}
-	
+
 	if port != 0 {
 		conf.Port = port
 	}
