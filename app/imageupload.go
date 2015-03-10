@@ -54,25 +54,26 @@ func main() {
 		port   int
 	)
 
-	flag.StringVar(&host, "h", "127.0.0.1", "Host to listen on")
-	flag.IntVar(&port, "p", 8080, "Port number to listen on")
+	flag.StringVar(&host, "h", "", "Host to listen on")
+	flag.IntVar(&port, "p", 0, "Port number to listen on")
 	flag.StringVar(&config, "c", "./config/app.json", "Path to configurations")
-
+	flag.Parse()
+	
 	conf := LoadConfig(config)
+	
+	if host != "" {
+		conf.Host = host
+	}
+	
+	if port != 0 {
+		conf.Port = port
+	}
 
 	m := martini.Classic()
-
 	for _, endpoint := range conf.Endpoints {
 
 		go func(endpoint *EndpointConfig) {
-			var storage uploader.ImageStorage
-			switch endpoint.Storage.Type {
-			case STORAGE_TYPE_FILE:
-				storage = uploader.NewImageStorageFile(endpoint.Storage.Configuration)
-			default:
-				panic(fmt.Sprintf("Unsupported storage type %s", endpoint.Storage.Type))
-			}
-			u := uploader.NewUploader(storage)
+			u := uploader.NewUploader(uploader.GetStorage(endpoint.Storage.Type, endpoint.Storage.Configuration))
 			handler := uploader.NewHandler(u)
 
 			m.Group(endpoint.Endpoint, func(r martini.Router) {
