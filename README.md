@@ -14,6 +14,9 @@ for creating new image
 for deleting an image
 
 ## Examle
+
+Take look in "app" if you want something more ready to run
+
     package main
     
     import (
