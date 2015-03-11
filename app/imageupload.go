@@ -10,15 +10,10 @@ import (
 	"os"
 )
 
-type StorageConfig struct {
-	Type          string
-	Configuration string
-}
-
 type EndpointConfig struct {
 	Endpoint  string
 	FileField string
-	Storage   *StorageConfig
+	Storage   *uploader.StorageConfig
 }
 
 type Config struct {
@@ -74,7 +69,7 @@ func main() {
 	for _, endpoint := range conf.Endpoints {
 
 		go func(endpoint *EndpointConfig) {
-			u := uploader.NewUploader(uploader.GetStorage(endpoint.Storage.Type, endpoint.Storage.Configuration))
+			u := uploader.NewUploader(uploader.GetStorage(endpoint.Storage))
 			handler := uploader.NewHandler(u)
 
 			m.Group(endpoint.Endpoint, func(r martini.Router) {
