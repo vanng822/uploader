@@ -65,7 +65,12 @@ func main() {
 		conf.Port = port
 	}
 
+	if len(conf.Endpoints) == 0 {
+		panic("There is no endpoint configured")
+	}
+	
 	m := martini.Classic()
+	
 	for _, endpoint := range conf.Endpoints {
 
 		go func(endpoint *EndpointConfig) {
