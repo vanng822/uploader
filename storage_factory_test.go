@@ -21,7 +21,19 @@ func TestStorageFactoryNotSupported(t *testing.T) {
 	conf := &StorageConfig{
 		Type:           "blablabla",
 		Configurations: config}
-	
+
+	assert.Panics(t, func() {
+		GetStorage(conf)
+	})
+}
+
+func TestStorageFactoryEmptyDir(t *testing.T) {
+	config := make(map[string]interface{})
+	config["directory"] = ""
+	conf := &StorageConfig{
+		Type:           STORAGE_TYPE_FILE,
+		Configurations: config}
+
 	assert.Panics(t, func() {
 		GetStorage(conf)
 	})
