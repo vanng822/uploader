@@ -8,13 +8,24 @@ const (
 	STORAGE_TYPE_FILE = "file"
 )
 
-func GetStorage(storageType, configuration string) ImageStorage {
+type StorageConfig struct {
+	Type           string
+	Configurations map[string]interface{}
+}
+
+func GetStorage(config *StorageConfig) ImageStorage {
 	var storage ImageStorage
-	switch storageType {
+	switch config.Type {
 	case STORAGE_TYPE_FILE:
-		storage = NewImageStorageFile(configuration)
+		// can convert to struct if more complex config
+		directory, ok := config.Configurations["directory"]
+		dir := directory.(string)
+		if !ok || dir == "" {
+			panic("File storage configuration needs to have a directory")
+		}
+		storage = NewImageStorageFile(dir)
 	default:
-		panic(fmt.Sprintf("Unsupported storage type %s", storageType))
+		panic(fmt.Sprintf("Unsupported storage type %s", config.Type))
 	}
 	return storage
 }
