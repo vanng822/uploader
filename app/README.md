@@ -10,7 +10,9 @@ You have possibility to configure your upload endpoints
 			"FileField": "image",
 			"Storage": {
 				"Type": "file",
-				"Configuration": "./data"
+				"Configurations": {
+					"directory": "./data"
+				}
 			}
 		}]
 	}
