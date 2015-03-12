@@ -10,5 +10,15 @@
 				"directory": "./data"
 			}
 		}
+	},{
+		"Endpoint": "/mongodb",
+		"FileField": "image",
+		"Storage": {
+			"Type": "mongodb",
+			"Configurations": {
+				"url": "localhost:27017/uploader",
+				"prefix": "test_uploader"
+			}
+		}
 	}]
 }
