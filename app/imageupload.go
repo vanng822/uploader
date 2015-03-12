@@ -6,9 +6,29 @@ import (
 	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/vanng822/uploader"
+	"github.com/vanng822/uploader/storage/file"
+	"github.com/vanng822/uploader/storage/mongodb"
 	"net/http"
 	"os"
 )
+
+const (
+	STORAGE_TYPE_FILE    = "file"
+	STORAGE_TYPE_MONGODB = "mongodb"
+)
+
+func GetStorage(config *uploader.StorageConfig) uploader.ImageStorage {
+	var storage uploader.ImageStorage
+	switch config.Type {
+	case STORAGE_TYPE_FILE:
+		storage = storage_file.New(config)
+	case STORAGE_TYPE_MONGODB:
+		storage = storage_mongodb.New(config)
+	default:
+		panic(fmt.Sprintf("Unsupported storage type %s", config.Type))
+	}
+	return storage
+}
 
 type EndpointConfig struct {
 	Endpoint  string
@@ -63,13 +83,13 @@ func main() {
 	if len(conf.Endpoints) == 0 {
 		panic("There is no endpoint configured")
 	}
-	
+
 	m := martini.Classic()
-	
+
 	for _, endpoint := range conf.Endpoints {
 
 		go func(endpoint *EndpointConfig) {
-			u := uploader.NewUploader(uploader.GetStorage(endpoint.Storage))
+			u := uploader.NewUploader(GetStorage(endpoint.Storage))
 			handler := uploader.NewHandler(u)
 
 			m.Group(endpoint.Endpoint, func(r martini.Router) {
