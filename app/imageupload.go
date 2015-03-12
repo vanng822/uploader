@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/vanng822/uploader"
-	"github.com/vanng822/uploader/storage/file"
 	"github.com/vanng822/uploader/storage/mongodb"
 	"net/http"
 	"os"
@@ -21,7 +20,7 @@ func GetStorage(config *uploader.StorageConfig) uploader.ImageStorage {
 	var storage uploader.ImageStorage
 	switch config.Type {
 	case STORAGE_TYPE_FILE:
-		storage = storage_file.New(config)
+		storage = uploader.NewImageStorageFile(config)
 	case STORAGE_TYPE_MONGODB:
 		storage = storage_mongodb.New(config)
 	default:

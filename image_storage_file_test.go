@@ -1,4 +1,4 @@
-package storage_file
+package uploader
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -7,7 +7,12 @@ import (
 )
 
 func TestNewImageStorageFile(t *testing.T) {
-	s := NewImageStorageFile("data")
+	config := &StorageConfig{
+		Type: "file",
+		Configurations: map[string]interface{}{
+			"directory": "data",
+		}}
+	s := NewImageStorageFile(config)
 	assert.Implements(t, new(ImageStorage), s)
 } 
 

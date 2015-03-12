@@ -1,8 +1,7 @@
-package storage_file
+package uploader
 
 import (
 	"fmt"
-	"github.com/vanng822/uploader"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -12,7 +11,7 @@ type imageStorageFile struct {
 	directory string
 }
 
-func New(config *uploader.StorageConfig) uploader.ImageStorage {
+func NewImageStorageFile(config *StorageConfig) ImageStorage {
 	// can convert to struct if more complex config
 	directory, ok := config.Configurations["directory"]
 	dir := directory.(string)
