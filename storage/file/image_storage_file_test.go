@@ -1,4 +1,4 @@
-package uploader
+package storage_file
 
 import (
 	"github.com/stretchr/testify/assert"

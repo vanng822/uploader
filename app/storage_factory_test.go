@@ -1,14 +1,15 @@
-package uploader
+package main
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/vanng822/uploader"
 	"testing"
 )
 
 func TestStorageFactoryFile(t *testing.T) {
 	config := make(map[string]interface{})
 	config["directory"] = "./data"
-	conf := &StorageConfig{
+	conf := &uploader.StorageConfig{
 		Type:           STORAGE_TYPE_FILE,
 		Configurations: config}
 
@@ -18,7 +19,7 @@ func TestStorageFactoryFile(t *testing.T) {
 func TestStorageFactoryNotSupported(t *testing.T) {
 	config := make(map[string]interface{})
 	config["directory"] = "./data"
-	conf := &StorageConfig{
+	conf := &uploader.StorageConfig{
 		Type:           "blablabla",
 		Configurations: config}
 
@@ -30,7 +31,7 @@ func TestStorageFactoryNotSupported(t *testing.T) {
 func TestStorageFactoryEmptyDir(t *testing.T) {
 	config := make(map[string]interface{})
 	config["directory"] = ""
-	conf := &StorageConfig{
+	conf := &uploader.StorageConfig{
 		Type:           STORAGE_TYPE_FILE,
 		Configurations: config}
 

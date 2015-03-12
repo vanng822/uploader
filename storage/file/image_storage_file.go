@@ -1,19 +1,26 @@
-package uploader
+package storage_file
 
 import (
-	"os"
 	"fmt"
-	"strings"
+	"github.com/vanng822/uploader"
 	"io/ioutil"
+	"os"
+	"strings"
 )
 
 type imageStorageFile struct {
 	directory string
 }
 
-func NewImageStorageFile(directory string) ImageStorage {
+func New(config *uploader.StorageConfig) uploader.ImageStorage {
+	// can convert to struct if more complex config
+	directory, ok := config.Configurations["directory"]
+	dir := directory.(string)
+	if !ok || dir == "" {
+		panic("File storage configuration needs to have a directory")
+	}
 	return &imageStorageFile{
-		directory: strings.TrimRight(directory, "/"),
+		directory: strings.TrimRight(dir, "/"),
 	}
 }
 
@@ -27,7 +34,7 @@ func (is *imageStorageFile) Put(filename string, imageData []byte) error {
 		return err
 	}
 	defer fd.Close()
-	
+
 	_, err = fd.Write(imageData)
 	return err
 }

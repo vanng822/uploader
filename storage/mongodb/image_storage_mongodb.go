@@ -32,7 +32,13 @@ type imageStorageMongodb struct {
 	prefix string
 }
 
-func New(prefix, url string) uploader.ImageStorage {
+func New(config *uploader.StorageConfig) uploader.ImageStorage {
+	url := config.Configurations["url"].(string)
+	prefix := config.Configurations["prefix"].(string)
+	if url == "" || prefix == "" {
+		panic("You need to configure 'url' with database and 'prefix'")
+	}
+
 	return &imageStorageMongodb{
 		url:    url,
 		prefix: prefix,
@@ -50,7 +56,7 @@ func (is *imageStorageMongodb) Put(filename string, imageData []byte) error {
 		return err
 	}
 	defer fd.Close()
-	
+
 	_, err = fd.Write(imageData)
 	return err
 }
@@ -61,7 +67,7 @@ func (is *imageStorageMongodb) Delete(filename string) error {
 
 func (is *imageStorageMongodb) Get(filename string) ([]byte, error) {
 	gridfs := is.getGridFS()
-	
+
 	fd, err := gridfs.Open(filename)
 	if err != nil {
 		return nil, err
