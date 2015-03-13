@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 )
 
-var session *mgo.Session
+var original_session *mgo.Session
 
 func dial(url string) *mgo.Session {
 	session, err := mgo.Dial(url)
@@ -17,14 +17,10 @@ func dial(url string) *mgo.Session {
 }
 
 func getSession(url string) *mgo.Session {
-	if session == nil {
-		session = dial(url)
+	if original_session == nil {
+		original_session = dial(url)
 	}
-	return session.New()
-}
-
-func getDB(url string) *mgo.Database {
-	return getSession(url).DB("")
+	return original_session.New()
 }
 
 type imageStorageMongodb struct {
@@ -45,12 +41,14 @@ func New(config *uploader.StorageConfig) uploader.ImageStorage {
 	}
 }
 
-func (is *imageStorageMongodb) getGridFS() *mgo.GridFS {
-	return getDB(is.url).GridFS(is.prefix)
+func (is *imageStorageMongodb) getGridFS(session *mgo.Session) *mgo.GridFS {
+	return session.DB("").GridFS(is.prefix)
 }
 
 func (is *imageStorageMongodb) Put(filename string, imageData []byte) error {
-	gridfs := is.getGridFS()
+	session := getSession(is.url)
+	defer session.Close()
+	gridfs := is.getGridFS(session)
 	fd, err := gridfs.Create(filename)
 	if err != nil {
 		return err
@@ -62,11 +60,16 @@ func (is *imageStorageMongodb) Put(filename string, imageData []byte) error {
 }
 
 func (is *imageStorageMongodb) Delete(filename string) error {
-	return is.getGridFS().Remove(filename)
+	session := getSession(is.url)
+	defer session.Close()
+	
+	return is.getGridFS(session).Remove(filename)
 }
 
 func (is *imageStorageMongodb) Get(filename string) ([]byte, error) {
-	gridfs := is.getGridFS()
+	session := getSession(is.url)
+	defer session.Close()
+	gridfs := is.getGridFS(session)
 
 	fd, err := gridfs.Open(filename)
 	if err != nil {
@@ -81,7 +84,10 @@ func (is *imageStorageMongodb) Get(filename string) ([]byte, error) {
 }
 
 func (is *imageStorageMongodb) Exists(filename string) bool {
-	gridfs := is.getGridFS()
+	session := getSession(is.url)
+	defer session.Close()
+	gridfs := is.getGridFS(session)
+	
 	fd, err := gridfs.Open(filename)
 	if err != nil {
 		// mgo.ErrNotFound
