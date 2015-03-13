@@ -10,7 +10,7 @@ env:
 
 
 before_install:
-  - sudo service start mongodb
+  - sudo service mongod start
 
 install:
   - go get github.com/nu7hatch/gouuid
