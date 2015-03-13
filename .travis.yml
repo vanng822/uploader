@@ -9,6 +9,9 @@ env:
   - PATH="$HOME/gopath/bin:$HOME/bin:$PATH"
 
 
+before_install:
+  - sudo apt-get install mongodb
+  - sudo service start mongodb
 
 install:
   - go get github.com/nu7hatch/gouuid
