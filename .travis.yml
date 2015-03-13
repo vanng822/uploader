@@ -8,9 +8,8 @@ env:
   - GOPATH="$HOME/gopath"
   - PATH="$HOME/gopath/bin:$HOME/bin:$PATH"
 
-
-before_install:
-  - sudo service mongod start
+services:
+  - mongodb
 
 install:
   - go get github.com/nu7hatch/gouuid
