@@ -1,4 +1,4 @@
-package storage_mongodb
+package mongodb
 
 import (
 	"github.com/vanng822/uploader"
