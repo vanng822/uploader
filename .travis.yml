@@ -10,7 +10,6 @@ env:
 
 
 before_install:
-  - sudo apt-get install mongodb
   - sudo service start mongodb
 
 install:
