@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/go-martini/martini"
 	"github.com/vanng822/uploader"
-	"github.com/vanng822/uploader/storage/mongodb"
+	storage_mongodb "github.com/vanng822/uploader/storage/mongodb"
 	"net/http"
 	"os"
 )
