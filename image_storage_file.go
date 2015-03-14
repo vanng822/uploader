@@ -12,12 +12,11 @@ type imageStorageFile struct {
 }
 
 func NewImageStorageFile(config map[string]string) ImageStorage {
-	dir := config["directory"]
-	if !ok || dir == "" {
+	if config["directory"] == "" {
 		panic("File storage configuration needs to have a directory")
 	}
 	return &imageStorageFile{
-		directory: strings.TrimRight(dir, "/"),
+		directory: strings.TrimRight(config["directory"], "/"),
 	}
 }
 

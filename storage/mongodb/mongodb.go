@@ -29,15 +29,13 @@ type imageStorageMongodb struct {
 }
 
 func New(config map[string]string) uploader.ImageStorage {
-	url := config["url"]
-	prefix := config["prefix"]
-	if url == "" || prefix == "" {
+	if config["url"] == "" || config["prefix"] == "" {
 		panic("You need to configure 'url' with database and 'prefix'")
 	}
 
 	return &imageStorageMongodb{
-		url:    url,
-		prefix: prefix,
+		url:    config["url"],
+		prefix: config["prefix"],
 	}
 }
 
@@ -62,7 +60,7 @@ func (is *imageStorageMongodb) Put(filename string, imageData []byte) error {
 func (is *imageStorageMongodb) Delete(filename string) error {
 	session := getSession(is.url)
 	defer session.Close()
-	
+
 	return is.getGridFS(session).Remove(filename)
 }
 
@@ -87,7 +85,7 @@ func (is *imageStorageMongodb) Exists(filename string) bool {
 	session := getSession(is.url)
 	defer session.Close()
 	gridfs := is.getGridFS(session)
-	
+
 	fd, err := gridfs.Open(filename)
 	if err != nil {
 		// mgo.ErrNotFound
