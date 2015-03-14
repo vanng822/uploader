@@ -16,13 +16,18 @@ const (
 	STORAGE_TYPE_MONGODB = "mongodb"
 )
 
+type StorageConfig struct {
+	Type           string
+	Configurations map[string]interface{}
+}
+
 func GetStorage(config *uploader.StorageConfig) uploader.ImageStorage {
 	var storage uploader.ImageStorage
 	switch config.Type {
 	case STORAGE_TYPE_FILE:
-		storage = uploader.NewImageStorageFile(config)
+		storage = uploader.NewImageStorageFile(config.Configurations)
 	case STORAGE_TYPE_MONGODB:
-		storage = storage_mongodb.New(config)
+		storage = storage_mongodb.New(config.Configurations)
 	default:
 		panic(fmt.Sprintf("Unsupported storage type %s", config.Type))
 	}
@@ -32,7 +37,7 @@ func GetStorage(config *uploader.StorageConfig) uploader.ImageStorage {
 type EndpointConfig struct {
 	Endpoint  string
 	FileField string
-	Storage   *uploader.StorageConfig
+	Storage   *StorageConfig
 }
 
 type Config struct {

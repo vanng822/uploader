@@ -7,12 +7,10 @@ import (
 )
 
 func TestNewImageStorageFile(t *testing.T) {
-	config := &uploader.StorageConfig{
-		Type: "mongodb",
-		Configurations: map[string]interface{}{
-			"url":    testUrl,
-			"prefix": testPrefix,
-		}}
+	config := map[string]interface{}{
+		"url":    testUrl,
+		"prefix": testPrefix,
+	}
 	s := New(config)
 	assert.Implements(t, new(uploader.ImageStorage), s)
 }
@@ -28,7 +26,6 @@ func TestPutDelete(t *testing.T) {
 	assert.Nil(t, s.Delete(filename))
 }
 
-
 func TestGet(t *testing.T) {
 	s := imageStorageMongodb{
 		url:    testUrl,
@@ -37,12 +34,12 @@ func TestGet(t *testing.T) {
 	filename := testGetFilename()
 	imageData := testGetImageByte()
 	assert.Nil(t, s.Put(filename, imageData))
-	
+
 	imageData, err := s.Get(filename)
 	assert.Nil(t, err)
 	assert.NotNil(t, imageData)
 	assert.Equal(t, len(imageData), 29429)
-	
+
 	assert.Nil(t, s.Delete(filename))
 }
 
@@ -54,10 +51,8 @@ func TestHas(t *testing.T) {
 	filename := testGetFilename()
 	imageData := testGetImageByte()
 	assert.Nil(t, s.Put(filename, imageData))
-	
-	
+
 	assert.True(t, s.Exists(filename))
 	assert.False(t, s.Exists("blabla.jpg"))
 	assert.Nil(t, s.Delete(filename))
 }
-

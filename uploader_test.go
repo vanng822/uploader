@@ -22,11 +22,9 @@ func TestSetAllowedImageType(t *testing.T) {
 }
 
 func TestUploaderStore(t *testing.T) {
-	config := &StorageConfig{
-		Type: "file",
-		Configurations: map[string]interface{}{
-			"directory": "./data",
-		}}
+	config := map[string]interface{}{
+		"directory": "./data",
+	}
 	u := NewUploader(NewImageStorageFile(config))
 	filename, err := u.Store(testGetImageByte())
 	assert.Nil(t, err)
@@ -35,11 +33,9 @@ func TestUploaderStore(t *testing.T) {
 }
 
 func TestUploaderStoreFileTypeNotAllowed(t *testing.T) {
-	config := &StorageConfig{
-		Type: "file",
-		Configurations: map[string]interface{}{
-			"directory": "./data",
-		}}
+	config := map[string]interface{}{
+		"directory": "./data",
+	}
 	u := NewUploader(NewImageStorageFile(config))
 	u.SetAllowedImageType(map[string]string{"image/png": "png", "image/gif": "gif"})
 	filename, err := u.Store(testGetImageByte())
@@ -49,11 +45,9 @@ func TestUploaderStoreFileTypeNotAllowed(t *testing.T) {
 }
 
 func TestUploaderGet(t *testing.T) {
-	config := &StorageConfig{
-		Type: "file",
-		Configurations: map[string]interface{}{
-			"directory": "./data",
-		}}
+	config := map[string]interface{}{
+		"directory": "./data",
+	}
 	u := NewUploader(NewImageStorageFile(config))
 	imageData, err := u.Get("kth.jpg")
 	assert.Nil(t, err)

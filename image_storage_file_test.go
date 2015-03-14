@@ -7,18 +7,16 @@ import (
 )
 
 func TestNewImageStorageFile(t *testing.T) {
-	config := &StorageConfig{
-		Type: "file",
-		Configurations: map[string]interface{}{
-			"directory": "data",
-		}}
+	config := map[string]interface{}{
+		"directory": "data",
+	}
 	s := NewImageStorageFile(config)
 	assert.Implements(t, new(ImageStorage), s)
-} 
+}
 
 func TestImageStorageFile(t *testing.T) {
 	s := imageStorageFile{directory: "data"}
-	assert.Equal(t, s.makeFilename("testing.jpg"), "data/testing.jpg") 
+	assert.Equal(t, s.makeFilename("testing.jpg"), "data/testing.jpg")
 }
 
 func TestPutDelete(t *testing.T) {

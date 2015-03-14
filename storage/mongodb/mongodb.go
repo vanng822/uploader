@@ -28,9 +28,9 @@ type imageStorageMongodb struct {
 	prefix string
 }
 
-func New(config *uploader.StorageConfig) uploader.ImageStorage {
-	url := config.Configurations["url"].(string)
-	prefix := config.Configurations["prefix"].(string)
+func New(config map[string]interface{}) uploader.ImageStorage {
+	url := config["url"].(string)
+	prefix := config["prefix"].(string)
 	if url == "" || prefix == "" {
 		panic("You need to configure 'url' with database and 'prefix'")
 	}
