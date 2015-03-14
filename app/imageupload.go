@@ -21,7 +21,7 @@ type StorageConfig struct {
 	Configurations map[string]string
 }
 
-func GetStorage(config *uploader.StorageConfig) uploader.ImageStorage {
+func GetStorage(config *StorageConfig) uploader.ImageStorage {
 	var storage uploader.ImageStorage
 	switch config.Type {
 	case STORAGE_TYPE_FILE:
