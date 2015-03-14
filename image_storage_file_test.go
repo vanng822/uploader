@@ -7,7 +7,7 @@ import (
 )
 
 func TestNewImageStorageFile(t *testing.T) {
-	config := map[string]interface{}{
+	config := map[string]string{
 		"directory": "data",
 	}
 	s := NewImageStorageFile(config)

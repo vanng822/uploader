@@ -11,10 +11,8 @@ type imageStorageFile struct {
 	directory string
 }
 
-func NewImageStorageFile(config map[string]interface{}) ImageStorage {
-	// can convert to struct if more complex config
-	directory, ok := config["directory"]
-	dir := directory.(string)
+func NewImageStorageFile(config map[string]string) ImageStorage {
+	dir := config["directory"]
 	if !ok || dir == "" {
 		panic("File storage configuration needs to have a directory")
 	}

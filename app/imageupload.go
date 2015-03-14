@@ -18,7 +18,7 @@ const (
 
 type StorageConfig struct {
 	Type           string
-	Configurations map[string]interface{}
+	Configurations map[string]string
 }
 
 func GetStorage(config *uploader.StorageConfig) uploader.ImageStorage {

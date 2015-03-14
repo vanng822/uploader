@@ -22,7 +22,7 @@ func TestSetAllowedImageType(t *testing.T) {
 }
 
 func TestUploaderStore(t *testing.T) {
-	config := map[string]interface{}{
+	config := map[string]string{
 		"directory": "./data",
 	}
 	u := NewUploader(NewImageStorageFile(config))
@@ -33,7 +33,7 @@ func TestUploaderStore(t *testing.T) {
 }
 
 func TestUploaderStoreFileTypeNotAllowed(t *testing.T) {
-	config := map[string]interface{}{
+	config := map[string]string{
 		"directory": "./data",
 	}
 	u := NewUploader(NewImageStorageFile(config))
@@ -45,7 +45,7 @@ func TestUploaderStoreFileTypeNotAllowed(t *testing.T) {
 }
 
 func TestUploaderGet(t *testing.T) {
-	config := map[string]interface{}{
+	config := map[string]string{
 		"directory": "./data",
 	}
 	u := NewUploader(NewImageStorageFile(config))
