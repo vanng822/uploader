@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/go-martini/martini"
+	"github.com/vanng822/r2router"
 	"github.com/vanng822/uploader"
 	storage_mongodb "github.com/vanng822/uploader/storage/mongodb"
 	"net/http"
@@ -88,7 +88,7 @@ func main() {
 		panic("There is no endpoint configured")
 	}
 
-	m := martini.Classic()
+	app := r2router.NewSeeforRouter()
 
 	for _, endpoint := range conf.Endpoints {
 
@@ -96,11 +96,11 @@ func main() {
 			u := uploader.NewUploader(GetStorage(endpoint.Storage))
 			handler := uploader.NewHandler(u)
 
-			m.Group(endpoint.Endpoint, func(r martini.Router) {
-				r.Get("/:filename", func(res http.ResponseWriter, req *http.Request, params martini.Params) {
-					handler.HandleGet(res, params["filename"])
+			app.Group(endpoint.Endpoint, func(r *r2router.GroupRouter) {
+				r.Get("/:filename", func(res http.ResponseWriter, req *http.Request, params r2router.Params) {
+					handler.HandleGet(res, params.Get("filename"))
 				})
-				r.Post("/", func(res http.ResponseWriter, req *http.Request, params martini.Params) {
+				r.Post("/", func(res http.ResponseWriter, req *http.Request, params r2router.Params) {
 					file, _, err := req.FormFile(endpoint.FileField)
 					if err != nil {
 						res.WriteHeader(http.StatusBadRequest)
@@ -108,20 +108,20 @@ func main() {
 					}
 					handler.HandlePost(res, file)
 				})
-				r.Put("/:filename", func(res http.ResponseWriter, req *http.Request, params martini.Params) {
+				r.Put("/:filename", func(res http.ResponseWriter, req *http.Request, params r2router.Params) {
 					file, _, err := req.FormFile(endpoint.FileField)
 					if err != nil {
 						res.WriteHeader(http.StatusBadRequest)
 						return
 					}
-					handler.HandlePut(res, file, params["filename"])
+					handler.HandlePut(res, file, params.Get("filename"))
 				})
-				r.Delete("/:filename", func(res http.ResponseWriter, req *http.Request, params martini.Params) {
-					handler.HandleDelete(res, params["filename"])
+				r.Delete("/:filename", func(res http.ResponseWriter, req *http.Request, params r2router.Params) {
+					handler.HandleDelete(res, params.Get("filename"))
 				})
 			})
 		}(endpoint)
 	}
 
-	http.ListenAndServe(fmt.Sprintf("%s:%d", conf.Host, conf.Port), m)
+	http.ListenAndServe(fmt.Sprintf("%s:%d", conf.Host, conf.Port), app)
 }
