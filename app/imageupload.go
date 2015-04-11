@@ -7,6 +7,7 @@ import (
 	"github.com/vanng822/r2router"
 	"github.com/vanng822/uploader"
 	storage_mongodb "github.com/vanng822/uploader/storage/mongodb"
+	"github.com/vanng822/uploader/storage/s3"
 	"net/http"
 	"os"
 )
@@ -14,6 +15,7 @@ import (
 const (
 	STORAGE_TYPE_FILE    = "file"
 	STORAGE_TYPE_MONGODB = "mongodb"
+	STORAGE_TYPE_S3      = "s3"
 )
 
 type StorageConfig struct {
@@ -21,6 +23,43 @@ type StorageConfig struct {
 	Configurations map[string]string
 }
 
+// Configuration format
+// {
+// 	"Host": "127.0.0.1",
+// 	"Port": 8080,
+// 	"Endpoints": [{
+// 		"Endpoint": "/storage",
+// 		"FileField": "image",
+// 		"Storage": {
+// 			"Type": "file",
+// 			"Configurations": {
+// 				"directory": "./data"
+// 			}
+// 		}
+// 	},{
+// 		"Endpoint": "/mongodb",
+// 		"FileField": "image",
+// 		"Storage": {
+// 			"Type": "mongodb",
+// 			"Configurations": {
+// 				"url": "localhost:27017/uploader",
+// 				"prefix": "test_uploader"
+// 			}
+// 		}
+// 	}, {
+// 		"Endpoint": "/s3",
+// 		"FileField": "image",
+// 		"Storage": {
+// 			"Type": "s3",
+// 			"Configurations": {
+// 				"regionName": "eu-west-1",
+// 				"accessKey":  "your_access_key",
+// 				"secretKey":  "your_secret_key",
+// 				"bucketName": "some_bucket"
+// 			}
+// 		}
+// 	}]
+// }
 func GetStorage(config *StorageConfig) uploader.ImageStorage {
 	var storage uploader.ImageStorage
 	switch config.Type {
@@ -28,6 +67,8 @@ func GetStorage(config *StorageConfig) uploader.ImageStorage {
 		storage = uploader.NewImageStorageFile(config.Configurations)
 	case STORAGE_TYPE_MONGODB:
 		storage = storage_mongodb.New(config.Configurations)
+	case STORAGE_TYPE_S3:
+		storage = s3.New(config.Configurations)
 	default:
 		panic(fmt.Sprintf("Unsupported storage type %s", config.Type))
 	}
