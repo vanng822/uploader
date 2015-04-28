@@ -1,5 +1,5 @@
 # Ready to run app
-This is a ready to run application. It is a restful image upload built on martini.
+This is a ready to run application. It is a restful image upload built on r2router.
 You have possibility to configure your upload endpoints
 
 	{
